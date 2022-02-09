@@ -6,7 +6,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script>
     <script type="text/javascript">
-        var pay = function () {
+          this.paySample3 = function () {
+    var widget = new cp.CloudPayments();
+
+    var data = {};
+    var auto = $('#recurrent-sample-3').is(':checked'); //проверка
+
+    if (auto) { //включаем подписку
+
+        var date = new Date(); //текущая дата
+        date.setMonth(date.getMonth() + 1); //следующий месяц
+        date.setDate(date.getDate() - 1); //минус один день
+
+        var recurrent = { interval: 'Month', period: 1, startDate: date }; //один раз в месяц начиная со следующего месяца за минусом одного дня
+        data.CloudPayments = {
+            recurrent: recurrent
+        }
+    }
+
+    var amount = parseFloat($('#amount-sample-3').val());
+    var accountId = $('#account-sample-3').val();
+
+    widget.charge({ // options
+        publicId: 'test_api_00000000000000000000002', //id из личного кабинета
+        description: 'Пополнение счета абонента ' + accountId, //назначение
+        amount: amount, //сумма
+        currency: 'RUB', //валюта
+        accountId: accountId, //идентификатор плательщика (обязательно для создания подписки)
+        data: data
+    },
+    function (options) { // success
+        //действие при успешной оплате
+    },
+    function (reason, options) { // fail
+        //действие при неуспешной оплате
+    });
+};
+        // var pay = function () {
             var widget = new cp.CloudPayments();
             console.log($('#fio').val())
             widget.charge(
@@ -36,13 +72,13 @@
                     }
                 }
             )
-        };
+        };//
         //$('#checkout').click(pay);
         console.log('init');
         $(document).on('click', ".btn", function () {
             console.log('click');
             pay();
-        });
+        })
     </script>
     <style type="text/css">
         h1 {
