@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CloudPayment Test</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://widget.cloudpayments.ru/bundles/cloudpayments.js"></script>
+    <script type="text/javascript">
+this.paySample4 = function () {
+    var widget = new cp.CloudPayments();
+
+    var data = { //данные дарителя
+        fio: $('#fio').val(),
+        tel: $('#tel').val(),
+        email: $('#email').val()
+    };
+
+    var auto = $('#checkbox').is(':checked'); //проверка
+
+    if (auto) { //включаем подписку
+        data.CloudPayments = {
+            recurrent: { interval: 'Month', period: 1 } //один раз в месяц начиная со следующего месяца
+        }
+    }
+
+    var amount = parseFloat($('#amount').val());
+    var accountId = $('#email').val();
+
+    widget.charge({ // options
+        publicId: 'test_api_00000000000000000000002', //id из личного кабинета
+        description: 'Пожертвование в фонд ...', //назначение
+        amount:amount, //сумма
+        currency: 'RUB', //валюта
+        accountId: accountId, //идентификатор плательщика (обязательно для создания подписки)
+        email: accountId,
+        data: data
+    },
+    function (options) { // success
+        //действие при успешной оплате
+		console.log('success');
+    },
+    function (reason, options) { // fail
+        //действие при неуспешной оплате
+		console.log('fail');
+    });
+};
+        console.log('init');
+        $(document).on('click', ".btn", function () {
+            console.log('click');
+            paySample4();
+        });
+    </script>
+    <style type="text/css">
+        h1 {
+            font-size: 36px;
+            font-family: Verdana, Arial, Helvetica, sans-serif;
+            color: #333366;
+        }
+
+        .form {
+            display: inline-block;
+            padding: 1em;
+            -moz-border-radius: 20px;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        body {
+            background: #000 url(mountain-5978746_1280.jpg); /* Фоновый цвет и фоновый рисунок*/
+            color: #333366; /*Цвет текста на странице*/
+            background-size: 100%
+        }
+
+        p {
+            display: inline-block
+        }
+    </style>
+</head>
+<body>
+<h1>Поможем животным из крассной книги. Всей планетой!</h1>
+<div align="center">
+    <div align="left" class="form" name="test">
+        <p>
+            <label for="fio"><b>ФИО:</b></label><br>
+            <input type="text" id="fio" size="20">
+        </p><br>
+        <p>
+            <label for="email"><b>E.mailадрес:</b></label><br>
+            <input type="email" id="email" size="20">
+        </p><br>
+        <p>
+            <label for="tel"><b>Телефон:</b></label><br>
+            <input type="tel" id="tel" size="20">
+        </p><br>
+        <p>
+            <label for="amount"><b>Сумма:</b></label><br>
+            <input type="number" id="amount" size="20" min="0" step="0.01">
+        </p><br>
+        <p>
+        	<input type="checkbox" id="checkbox"><b>Помогать ежемесячно</b>
+        </p><br>
+        <p>
+           <button class="btn" id="btn">Оплатить</button>
+        </p>
+    </div>
+</div>
+</body>
+</html>
